@@ -1693,12 +1693,12 @@ static int ccs_power_off(struct device *dev)
 	if (sensor->hwcfg.i2c_addr_alt)
 		ccs_write(sensor, SOFTWARE_RESET, CCS_SOFTWARE_RESET_ON);
 
-	gpiod_set_value(sensor->reset, 1);
+	/*gpiod_set_value(sensor->reset, 1);
 	gpiod_set_value(sensor->xshutdown, 0);
 	clk_disable_unprepare(sensor->ext_clk);
 	usleep_range(5000, 5000);
 	regulator_bulk_disable(ARRAY_SIZE(ccs_regulators),
-			       sensor->regulators);
+			       sensor->regulators);*/
 	sensor->streaming = false;
 
 	return 0;

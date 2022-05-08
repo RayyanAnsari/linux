@@ -116,6 +116,72 @@
 	};
 };
 
+&tlmm {
+	mclk0_pin_a: mclk0-pin-active {
+		pins = "gpio26";
+		function = "cam_mclk0";
+
+		drive-strength = <2>;
+		bias-disable;
+	};
+
+	mclk1_pin_a: mclk1-pin-active {
+		pins = "gpio27";
+		function = "cam_mclk1";
+
+		drive-strength = <2>;
+		bias-disable;
+	};
+};
+
+&cci {
+	status = "okay";
+};
+
+&cci_i2c0 {
+	camera-back@10 {
+		compatible = "nokia,smia";
+		reg = <0x10>;
+
+		vana-supply = <&pm8226_l19>;
+		clocks = <&mmcc CAMSS_MCLK0_CLK>;
+		clock-frequency = <19200000>;
+
+		pinctrl-names = "default";
+		pinctrl-0 = <&mclk0_pin_a>;
+
+		port {
+			smiapp_back_ep: endpoint {
+				clock-lanes = <1>;
+				data-lanes = <0 2 3 4>;
+				link-frequencies = /bits/ 64 <342000000>; 
+				bus-type = <4>;
+				remote-endpoint = <&csiphy0_ep>;
+			};
+		};
+
+	};
+};
+
+&camss {
+	status = "okay";
+
+	vdda-supply = <&pm8226_l4>;
+
+	ports {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		port@0 {
+			reg = <0>;
+			csiphy0_ep: endpoint {
+				clock-lanes = <1>;
+				data-lanes = <0 2 3 4>;
+				remote-endpoint = <&smiapp_back_ep>;
+			};
+		};
+	};
+};
+
 &framebuffer0 {
 	width = <720>;
 	height = <1280>;
